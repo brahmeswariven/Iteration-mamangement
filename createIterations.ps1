@@ -40,7 +40,7 @@ else {
     $StartDateIteration = $StartDate
     For ($i=1; $i -le $NumberOfSprints; $i++) 
     {
-        $Sprint = "Sprint {0:D2}{1}" -f + $i, ($YearOfIteration).Year.ToString().Substring(2, 2)
+        $Sprint = "Sprint"  + $i "$($StartDate.Year.ToString().Substring(2, 2))" 
         $FinishDateIteration = $StartDateIteration.AddDays(13)
         $createIteration = az boards iteration project create --name $Sprint --path $RootPath --start-date $StartDateIteration --finish-date $FinishDateIteration --org $Organization --project $Project | ConvertFrom-Json
         $addIteration = az boards iteration team add --id $createIteration.Identifier --team $TeamName --org $Organization --project $Project | ConvertFrom-Json
