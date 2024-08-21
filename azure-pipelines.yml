@@ -22,7 +22,7 @@ steps:
 - task: PowerShell@2
   displayName: 'Run the PowerShell script'
   inputs:
-    filePath: '$(build.sourcesdirectory)/createIterations.ps1'
+    filePath: '$(build.sourcesdirectory)/iterations.ps1'
     arguments: -Organization "$(Organization)" -PAT "$(PAT)" `
       -Project "$(Project)" `
       -TeamName "$(TeamName)" `
