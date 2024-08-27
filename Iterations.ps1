@@ -34,7 +34,7 @@ $ListOfIterations = az boards iteration project list --depth 1 | ConvertFrom-Jso
 if ($ListOfIterations.children.name -contains $StartDate.Year) {
     Write-Host "`n$($StartDate.Year) path already exists and won't be created."
 } else {
-    Write-Host "`n$($StartDate.Year) does not exist and will be created."
+   # Write-Host "`n$($StartDate.Year) does not exist and will be created."
     $CreateRootIteration = az boards iteration project create --name $StartDate.Year --path $ParentIteration | ConvertFrom-Json
     # Comment out or remove the following line to avoid displaying the created root path message
     # Write-Host 'Created Root path: '$CreateRootIteration.name
