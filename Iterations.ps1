@@ -20,25 +20,11 @@ Write-Host "NumberOfSprints: $NumberOfSprints`n"
 # Set up the start date and paths
 $StartDate = Get-Date -Year $YearOfIteration -Month $MonthOfIteration -Day $StartDateOfIteration
 $RootPath = "\" + $Project + "\Iteration\" + $StartDate.Year
-$ParentIteration = "\" + $Project + "\Iteration"
 
 # Log in to Azure DevOps
 Write-Output $PAT | az devops login --org $Organization
 Write-Host "`n===Configuring connection to organization and Team Project==="
 az devops configure --defaults organization=$Organization project=$Project
-
-# Get existing iterations
-$ListOfIterations = az boards iteration project list --depth 1 | ConvertFrom-Json
-
-# Check if the root folder exists
-#if ($ListOfIterations.children.name -contains $StartDate.Year) {
-    Write-Host "`n$($StartDate.Year) path already exists and won't be created."
-} else {
-   # Write-Host "`n$($StartDate.Year) does not exist and will be created."
-  #  $CreateRootIteration = az boards iteration project create --name $StartDate.Year --path $ParentIteration | ConvertFrom-Json
-    # Comment out or remove the following line to avoid displaying the created root path message
-     Write-Host 'Created Root path: '$CreateRootIteration.name
-}
 
 # Create new sprints sequentially
 $StartDateIteration = $StartDate
@@ -53,3 +39,4 @@ For ($i = 1; $i -le $NumberOfSprints; $i++) {
 
 # Log out from Azure DevOps
 az devops logout
+
