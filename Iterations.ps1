@@ -23,6 +23,9 @@ az devops configure --defaults organization=$Organization project=$Project
 # Get the existing sprints in the project
 $ExistingIterations = az boards iteration project list --project $Project --org $Organization --depth 1 | ConvertFrom-Json
 
+# Debugging: Output existing iterations for inspection
+Write-Host "Existing iterations: $($ExistingIterations | ConvertTo-Json)"
+
 # Find the last sprint in the project to append the new ones after it
 $LastIteration = $ExistingIterations | Sort-Object { $_.attributes.finishDate } -Descending | Select-Object -First 1
 
@@ -31,11 +34,17 @@ if ($LastIteration -eq $null) {
     Write-Host "No existing sprints found. Starting from tomorrow."
     $StartDateIteration = [datetime]::Now.AddDays(1)  # Start from tomorrow
 } else {
-    Write-Host "Last iteration attributes: $($LastIteration.attributes | ConvertTo-Json)"
+    Write-Host "Last iteration attributes: $($LastIteration | ConvertTo-Json)"
     
-    # Check if finishDate is not empty or null
-    if (-not [string]::IsNullOrWhiteSpace($LastIteration.attributes.finishDate)) {
-        $StartDateIteration = [datetime]::Parse($LastIteration.attributes.finishDate).AddDays(1)
+    # Attempt to retrieve the finish date
+    $FinishDateString = $LastIteration.attributes.finishDate
+    if (-not [string]::IsNullOrWhiteSpace($FinishDateString)) {
+        try {
+            $StartDateIteration = [datetime]::Parse($FinishDateString).AddDays(1)
+        } catch {
+            Write-Host "Failed to parse finishDate '$FinishDateString'. Starting from tomorrow."
+            $StartDateIteration = [datetime]::Now.AddDays(1)
+        }
     } else {
         Write-Host "Last iteration's finishDate is empty or invalid. Starting from tomorrow."
         $StartDateIteration = [datetime]::Now.AddDays(1)
@@ -43,8 +52,8 @@ if ($LastIteration -eq $null) {
 }
 
 # Initialize sprint number and year
-$CurrentSprintNumber = $StartingSprintNumber
-$CurrentYear = $StartingYear
+$CurrentSprintNumber = [int]$StartingSprintNumber
+$CurrentYear = [int]$StartingYear
 
 # Create new sprints sequentially
 For ($i = 1; $i -le $NumberOfSprints; $i++) {
@@ -81,7 +90,6 @@ For ($i = 1; $i -le $NumberOfSprints; $i++) {
 
 # Log out from Azure DevOps
 az devops logout
-
 
 
 
