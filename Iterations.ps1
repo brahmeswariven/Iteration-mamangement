@@ -3,9 +3,9 @@ param(
     [Parameter(Mandatory=$true)][String]$PAT,
     [Parameter(Mandatory=$true)][String]$Project,
     [Parameter(Mandatory=$true)][String]$TeamName,
-    [Parameter(Mandatory=$true)][Int]$StartingSprintNumber,   # Starting Sprint Number (e.g., 21 if starting from Sprint 2124)
-    [Parameter(Mandatory=$true)][Int]$StartingYear,           # Starting Year (e.g., 24 for 2024)
-    [Parameter(Mandatory=$true)][Int]$NumberOfSprints         # Number of new sprints to create
+    [Parameter(Mandatory=$true)][String]$StartingSprintNumber,   # Starting Sprint Number (e.g., 21 if starting from Sprint 2124)
+    [Parameter(Mandatory=$true)][String]$StartingYear,           # Starting Year (e.g., 24 for 2024)
+    [Parameter(Mandatory=$true)][String]$NumberOfSprints         # Number of new sprints to create
 )
 
 Write-Host "`nValues provided to the script:"
