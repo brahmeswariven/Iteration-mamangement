@@ -28,6 +28,6 @@ steps:
       -TeamName "$(TeamName)" `
       -StartingSprintNumber "$(StartingSprintNumber)" `
       -StartingYear "$(StartingYear)" `
-      -StartDateOfIteration "$(StartDateOfIteration)" `
       -NumberOfSprints "$(NumberOfSprints)"
 #      -MonthOfIteration "$(MonthOfIteration)" `
+#      -StartDateOfIteration "$(StartDateOfIteration)" `
