@@ -22,12 +22,12 @@ steps:
 - task: PowerShell@2
   displayName: 'Run the PowerShell script'
   inputs:
-    filePath:  $(build.sourcesdirectory)/Iterations.ps1'
+    filePath: '$(build.sourcesdirectory)/Iterations.ps1'
     arguments: -Organization "$(Organization)" -PAT "$(PAT)" `
       -Project "$(Project)" `
       -TeamName "$(TeamName)" `
-      -YearOfIteration "$(YearOfIteration)" `
-
-      -StartDateOfIteration "$(StartDateOfIteration)" `
       -StartingSprintNumber "$(StartingSprintNumber)" `
+      -YearOfIteration "$(YearOfIteration)" `
+      -StartDateOfIteration "$(StartDateOfIteration)" `
       -NumberOfSprints "$(NumberOfSprints)"
+#      -MonthOfIteration "$(MonthOfIteration)" `
