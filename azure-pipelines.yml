@@ -27,7 +27,7 @@ steps:
       -Project "$(Project)" `
       -TeamName "$(TeamName)" `
       -StartingSprintNumber "$(StartingSprintNumber)" `
-      -YearOfIteration "$(YearOfIteration)" `
+      -StartingYear "$(StartingYear)" `
       -StartDateOfIteration "$(StartDateOfIteration)" `
       -NumberOfSprints "$(NumberOfSprints)"
 #      -MonthOfIteration "$(MonthOfIteration)" `
