@@ -29,4 +29,5 @@ steps:
       -YearOfIteration "$(YearOfIteration)" `
       -MonthOfIteration "$(MonthOfIteration)" `
       -StartDateOfIteration "$(StartDateOfIteration)" `
+      -StartingSprintNumber "$(StartingSprintNumber)" `
       -NumberOfSprints "$(NumberOfSprints)"
