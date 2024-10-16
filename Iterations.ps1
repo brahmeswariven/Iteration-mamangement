@@ -25,8 +25,22 @@ $ExistingIterations = az boards iteration project list --project $Project --org 
 
 # Find the last sprint in the project to append the new ones after it
 $LastIteration = $ExistingIterations | Sort-Object { $_.attributes.finishDate } -Descending | Select-Object -First 1
-$ParentPath = $LastIteration.path
-$StartDateIteration = [datetime]::Parse($LastIteration.attributes.finishDate).AddDays(1)  # Start next sprint the day after last one finishes
+
+# Check if last iteration is found and log the attributes
+if ($LastIteration -eq $null) {
+    Write-Host "No existing sprints found. Starting from tomorrow."
+    $StartDateIteration = [datetime]::Now.AddDays(1)  # Start from tomorrow
+} else {
+    Write-Host "Last iteration attributes: $($LastIteration.attributes | ConvertTo-Json)"
+    
+    # Check if finishDate is not empty or null
+    if (-not [string]::IsNullOrWhiteSpace($LastIteration.attributes.finishDate)) {
+        $StartDateIteration = [datetime]::Parse($LastIteration.attributes.finishDate).AddDays(1)
+    } else {
+        Write-Host "Last iteration's finishDate is empty or invalid. Starting from tomorrow."
+        $StartDateIteration = [datetime]::Now.AddDays(1)
+    }
+}
 
 # Initialize sprint number and year
 $CurrentSprintNumber = $StartingSprintNumber
@@ -34,7 +48,6 @@ $CurrentYear = $StartingYear
 
 # Create new sprints sequentially
 For ($i = 1; $i -le $NumberOfSprints; $i++) {
-
     # Calculate sprint name (e.g., Sprint 2124, Sprint 0125)
     $SprintName = "Sprint $($CurrentSprintNumber.ToString('D2'))$($CurrentYear.ToString())"
 
@@ -49,7 +62,7 @@ For ($i = 1; $i -le $NumberOfSprints; $i++) {
     $FinishDateIteration = $StartDateIteration.AddDays(14)
 
     # Create new sprint and assign it to the team
-    $createIteration = az boards iteration project create --name $SprintName --path $ParentPath --start-date $StartDateIteration --finish-date $FinishDateIteration --org $Organization --project $Project | ConvertFrom-Json
+    $createIteration = az boards iteration project create --name $SprintName --path $LastIteration.path --start-date $StartDateIteration --finish-date $FinishDateIteration --org $Organization --project $Project | ConvertFrom-Json
     $addIteration = az boards iteration team add --id $createIteration.identifier --team $TeamName --org $Organization --project $Project | ConvertFrom-Json
     Write-Host "$($addIteration.name) created on path $($addIteration.path)"
 
@@ -68,6 +81,7 @@ For ($i = 1; $i -le $NumberOfSprints; $i++) {
 
 # Log out from Azure DevOps
 az devops logout
+
 
 
 
